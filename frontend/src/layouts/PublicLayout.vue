@@ -1,0 +1,169 @@
+<template>
+  <div class="public-layout">
+    <header class="header">
+      <div class="header-inner">
+        <div class="brand" @click="$router.push('/')">
+          <el-icon :size="24"><School /></el-icon>
+          <span>{{ conference.shortName || '会议管理系统' }}</span>
+        </div>
+        <el-menu mode="horizontal" router :default-active="$route.path" class="nav" :ellipsis="false">
+          <el-menu-item index="/">首页</el-menu-item>
+          <el-menu-item index="/cfp">征文</el-menu-item>
+          <el-menu-item index="/experts">专家介绍</el-menu-item>
+          <el-menu-item index="/keynotes">主旨报告</el-menu-item>
+          <el-menu-item index="/schedule">会议日程</el-menu-item>
+          <el-menu-item index="/accepted">录用论文</el-menu-item>
+          <el-menu-item index="/notifications">通知</el-menu-item>
+          <el-menu-item index="/materials">资料下载</el-menu-item>
+        </el-menu>
+        <div class="user-area">
+          <template v-if="store.isLogin">
+            <el-dropdown @command="handleCommand">
+              <span class="user-entry">
+                <el-avatar :size="28" :src="avatarUrl" @error="avatarUrl = ''" class="top-avatar">
+                  {{ store.realName?.charAt(0) }}
+                </el-avatar>
+                {{ store.realName }}({{ roleText[store.role] }})
+                <el-icon><ArrowDown /></el-icon>
+              </span>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item command="account">个人中心</el-dropdown-item>
+                  <el-dropdown-item v-if="store.role === 'AUTHOR'" command="my">我的投稿</el-dropdown-item>
+                  <el-dropdown-item v-if="store.role === 'EXPERT'" command="review">评审任务</el-dropdown-item>
+                  <el-dropdown-item v-if="store.role === 'ADMIN'" command="admin">后台管理</el-dropdown-item>
+                  <el-dropdown-item divided command="logout">退出登录</el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+          </template>
+          <template v-else>
+            <el-button text @click="$router.push('/login')">登录</el-button>
+            <el-button type="primary" @click="$router.push('/register')">注册</el-button>
+          </template>
+        </div>
+      </div>
+    </header>
+
+    <main class="main">
+      <div class="main-inner">
+        <router-view />
+      </div>
+    </main>
+
+    <footer class="footer">
+      {{ conference.name || '会议管理系统' }}
+      <template v-if="conference.contactEmail"> · 联系邮箱:{{ conference.contactEmail }}</template>
+    </footer>
+
+    <AiChat />
+  </div>
+</template>
+
+<script setup>
+import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
+import { useUserStore } from '../stores/user'
+import { getConference } from '../api'
+import { roleText } from '../utils/format'
+import AiChat from '../components/AiChat.vue'
+
+const router = useRouter()
+const store = useUserStore()
+const conference = ref({})
+const avatarUrl = ref(store.isLogin ? `/api/public/avatar/${store.user?.id}` : '')
+
+onMounted(async () => {
+  try {
+    conference.value = (await getConference()) || {}
+  } catch (e) {
+    /* 后端未启动时静默 */
+  }
+})
+
+function handleCommand(command) {
+  if (command === 'logout') {
+    store.logout()
+    ElMessage.success('已退出登录')
+    router.push('/')
+  } else if (command === 'my') {
+    router.push('/author/papers')
+  } else if (command === 'review') {
+    router.push('/expert/tasks')
+  } else if (command === 'admin') {
+    router.push('/admin')
+  } else if (command === 'account') {
+    router.push('/account')
+  }
+}
+</script>
+
+<style scoped>
+.public-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #409eff;
+  cursor: pointer;
+  white-space: nowrap;
+  margin-right: 12px;
+}
+.nav {
+  flex: 1;
+  border-bottom: none;
+}
+.user-area {
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.user-entry {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  color: #303133;
+}
+.top-avatar {
+  background: #409eff;
+  flex-shrink: 0;
+}
+.main {
+  flex: 1;
+  padding: 24px 0;
+}
+.main-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+.footer {
+  text-align: center;
+  color: #909399;
+  padding: 18px 0;
+  font-size: 13px;
+}
+</style>

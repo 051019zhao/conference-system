@@ -1,0 +1,28 @@
+# openGauss 数据库编排(数据库课程大作业)
+# 使用:先启动 Docker Desktop,然后在 conference-system 目录执行
+#   docker compose up -d
+# 说明:
+#   - GS_DB 会在数据卷首次初始化时自动创建 conference_db 业务库
+#   - 数据持久化在命名卷 opengauss_data 中,重启容器数据不丢
+#   - 密码必须满足复杂度要求(大小写+数字+特殊字符,>=8位),否则容器起不来
+services:
+  opengauss:
+    image: opengauss/opengauss:5.0.0
+    container_name: opengauss
+    privileged: true
+    environment:
+      GS_PASSWORD: Gauss@123
+      GS_DB: conference_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - opengauss_data:/var/lib/opengauss
+    healthcheck:
+      test: ["CMD-SHELL", "export LD_LIBRARY_PATH=/usr/local/opengauss/lib; /usr/local/opengauss/bin/gsql -d postgres -U gaussdb -W Gauss@123 -c 'SELECT 1' > /dev/null 2>&1"]
+      interval: 15s
+      timeout: 8s
+      retries: 10
+      start_period: 60s
+
+volumes:
+  opengauss_data:

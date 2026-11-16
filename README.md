@@ -138,4 +138,3 @@ conference-system/
 - 数据库设计 → `database/数据库设计说明.md` + `backend/src/main/resources/schema.sql`
 - 系统架构 → `架构设计.md`
 - 测试 → `node scripts/smoke-test.mjs`(全流程自动化,截图/输出可用于报告"系统测试"章节);SQL 可用 Data Studio 执行并截图(EXPLAIN 验证索引)
-

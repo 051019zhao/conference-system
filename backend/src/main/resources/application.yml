@@ -1,0 +1,54 @@
+server:
+  port: 8080
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+
+spring:
+  application:
+    name: conference-server
+  datasource:
+    # openGauss 默认端口:官方 Docker 镜像为 5432;数据库名 conference_db(启动前需先创建)
+    # 敏感信息支持环境变量覆盖,冒号后为本地演示默认值(正式部署时通过环境变量注入)
+    url: ${DB_URL:jdbc:opengauss://localhost:5432/conference_db?currentSchema=public&batchRestoreSchema=true}
+    username: ${DB_USER:gaussdb}
+    password: ${DB_PASSWORD:Gauss@123}
+    driver-class-name: org.opengauss.Driver
+  servlet:
+    multipart:
+      max-file-size: 21MB        # 论文附件限制 20MB,留 1MB 余量
+      max-request-size: 55MB        # 主稿 20MB + 最多 3 份证明材料各 10MB，留出表单余量
+  jackson:
+    time-zone: GMT+8
+  mail:                          # 邮件未启用时(app.mail-enabled=false)以下配置不生效
+    host: smtp.qq.com
+    port: 465
+    username: yourmail@qq.com    # TODO: 换成自己的 QQ 邮箱并开启 SMTP 服务获取授权码
+    password: your-smtp-auth-code
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.ssl.enable: true
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true   # 数据库下划线列名 -> Java 驼峰属性
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+
+logging:
+  level:
+    com.scut.conference.mapper: debug    # 控制台打印 SQL,便于调试与答辩演示
+
+app:
+  mail-enabled: false          # true=真实发邮件;false=验证码打印到后端日志并返回给前端(本地联调用)
+  jwt-secret: ${JWT_SECRET:conference-system-jwt-secret-please-change-in-production-2026}
+  jwt-expire-hours: 24
+  upload-dir: ${UPLOAD_DIR:./upload}   # 上传文件根目录(相对后端运行目录,生产建议绝对路径)
+  ai:
+    enabled: true
+    # 智谱开放平台(OpenAI 兼容协议);glm-4-flash 免费。到 https://open.bigmodel.cn 申请。
+    # 未配置 Key 时 AI 功能优雅降级(返回"AI 服务未配置"),不影响系统其他功能
+    api-key: ${AI_API_KEY:}
+    base-url: ${AI_BASE_URL:https://open.bigmodel.cn/api/paas/v4}
+    model: ${AI_MODEL:glm-4-flash}
+    timeout-seconds: 90

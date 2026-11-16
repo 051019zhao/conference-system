@@ -1,0 +1,24 @@
+# Java / Maven
+backend/target/
+*.class
+*.jar
+
+# Node
+frontend/node_modules/
+frontend/dist/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# 上传文件与日志
+upload/
+*.log
+
+# 系统
+.DS_Store
+Thumbs.db
+
+# 本地私密配置(不入库)
+scripts/local.env.cmd
