@@ -1,14 +1,16 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
-// 开发服务器把 /api 代理到后端 8080,前端无需处理跨域
+// 本机运行默认走 8080；容器运行可通过 VITE_API_TARGET 指向映射端口。
+const apiTarget = process.env.VITE_API_TARGET || 'http://localhost:8080'
+
 export default defineConfig({
   plugins: [vue()],
   server: {
     port: 5173,
     proxy: {
       '/api': {
-        target: 'http://localhost:8080',
+        target: apiTarget,
         changeOrigin: true
       }
     }

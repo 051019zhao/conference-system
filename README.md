@@ -59,6 +59,8 @@ docker exec -it opengauss gsql -d postgres -c "CREATE DATABASE conference_db ENC
 
 **方式一(Windows):** 启动 Docker Desktop 后运行 `scripts/run-backend.cmd`（自动启动或复用数据库容器、检测 JDK 17 和 Maven；可先运行 `scripts/run-backend.cmd --check`，日志输出在终端）
 
+**8080 端口无法使用时：** 运行 `scripts/run-backend-docker.cmd`，后端会在 Docker 中启动并映射到本机 `http://localhost:18080`。此方式仍需本机 JDK 17 和 Maven 打包，首次使用需下载 `eclipse-temurin:17-jre` 镜像。随后正常运行 `scripts/run-frontend.cmd`，它会自动把 `/api` 代理到容器后端。
+
 **方式二(IDEA):** 打开 `backend` 目录,Project SDK 选 JDK 17,运行 `ConferenceApplication`
 
 - 首次启动会**自动建表(schema.sql,含审计日志表)+ 写入演示数据**(账号见下表);
@@ -78,7 +80,7 @@ npm install
 npm run dev
 ```
 
-访问:http://localhost:5173 (已配置代理到后端 8080)
+访问:http://localhost:5173 (本机后端默认代理到 8080，运行 Docker 后端时自动代理到 18080)
 
 ## 演示账号(首次启动自动创建)
 

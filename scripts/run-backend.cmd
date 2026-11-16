@@ -33,7 +33,11 @@ if /i "%~1"=="--check" (
 
 if not defined DB_URL call "%~dp0run-db.cmd" || exit /b 1
 pushd "%PROJECT_DIR%\backend" || exit /b 1
-call "%MAVEN_CMD%" spring-boot:run
+if /i "%~1"=="--package" (
+    call "%MAVEN_CMD%" -q -DskipTests package
+) else (
+    call "%MAVEN_CMD%" spring-boot:run
+)
 set "RESULT=%ERRORLEVEL%"
 popd
 exit /b %RESULT%
