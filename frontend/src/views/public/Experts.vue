@@ -2,7 +2,7 @@
   <div>
     <div class="page-title">专家介绍</div>
     <el-row :gutter="16">
-      <el-col v-for="e in experts" :key="e.userId" :span="8">
+      <el-col v-for="e in experts" :key="e.userId" :xs="24" :sm="12" :lg="8">
         <el-card class="expert-card" shadow="hover">
           <div class="expert-head">
             <el-avatar :size="56" :src="`/api/public/avatar/${e.userId}`" @error="e.avatarFailed = true">

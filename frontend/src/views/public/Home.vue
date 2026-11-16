@@ -187,4 +187,15 @@ onMounted(async () => {
   color: #909399;
   font-size: 13px;
 }
+@media (max-width: 600px) {
+  .hero { padding: 32px 16px; }
+  .hero-title { font-size: 24px; line-height: 1.35; }
+  .hero-meta { flex-direction: column; align-items: center; gap: 8px; }
+  .hero-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+  .hero-actions .el-button { margin: 0; }
+  .stat-card { padding: 16px 4px; }
+  .stat-num { font-size: 26px; }
+  .stat-label { font-size: 12px; }
+  .notice-item { flex-direction: column; gap: 4px; }
+}
 </style>

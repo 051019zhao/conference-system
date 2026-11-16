@@ -27,4 +27,10 @@ body {
   font-weight: 600;
   margin-bottom: 16px;
 }
+@media (max-width: 600px) {
+  .page-card { padding: 18px 16px; }
+  .page-title { font-size: 18px; }
+  .el-dialog, .el-message-box { max-width: calc(100vw - 24px); }
+  .el-drawer { max-width: 100vw; }
+}
 </style>

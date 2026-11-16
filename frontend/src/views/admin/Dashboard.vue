@@ -1,25 +1,25 @@
 <template>
   <div>
     <el-row :gutter="16">
-      <el-col :span="6">
+      <el-col :xs="12" :sm="12" :md="6">
         <div class="page-card stat">
           <div class="num">{{ stats.paperCount ?? '-' }}</div>
           <div class="label">论文总数</div>
         </div>
       </el-col>
-      <el-col :span="6">
+      <el-col :xs="12" :sm="12" :md="6">
         <div class="page-card stat">
           <div class="num">{{ statusCount('ACCEPTED') + statusCount('FINAL_SUBMITTED') }}</div>
           <div class="label">录用论文</div>
         </div>
       </el-col>
-      <el-col :span="6">
+      <el-col :xs="12" :sm="12" :md="6">
         <div class="page-card stat">
           <div class="num">{{ roleCount('EXPERT') }}</div>
           <div class="label">评审专家</div>
         </div>
       </el-col>
-      <el-col :span="6">
+      <el-col :xs="12" :sm="12" :md="6">
         <div class="page-card stat">
           <div class="num">{{ stats.userCount ?? '-' }}</div>
           <div class="label">用户总数</div>
@@ -28,13 +28,13 @@
     </el-row>
 
     <el-row :gutter="16" style="margin-top: 16px">
-      <el-col :span="10">
+      <el-col :xs="24" :md="10">
         <div class="page-card">
           <div class="page-title">论文状态分布</div>
           <div ref="pieRef" class="chart"></div>
         </div>
       </el-col>
-      <el-col :span="14">
+      <el-col :xs="24" :md="14">
         <div class="page-card">
           <div class="page-title">各专题投稿数量</div>
           <div ref="barRef" class="chart"></div>
@@ -139,6 +139,7 @@ const pieRef = ref(null)
 const barRef = ref(null)
 let pieChart = null
 let barChart = null
+let chartResizeObserver = null
 
 function statusCount(status) {
   const row = (stats.value.byStatus || []).find((s) => s.status === status)
@@ -201,7 +202,13 @@ async function handleSave() {
       finalDeadline: conf.value.finalDeadline,
       intro: conf.value.intro,
       cfpText: conf.value.cfpText,
-      contactEmail: conf.value.contactEmail
+      contactEmail: conf.value.contactEmail,
+      organizerName: conf.value.organizerName,
+      organizerUrl: conf.value.organizerUrl,
+      organizerLogoUrl: conf.value.organizerLogoUrl,
+      coorganizerName: conf.value.coorganizerName,
+      coorganizerUrl: conf.value.coorganizerUrl,
+      coorganizerLogoUrl: conf.value.coorganizerLogoUrl
     })
     ElMessage.success('会议信息已保存')
   } finally {
@@ -214,9 +221,16 @@ onMounted(async () => {
   conf.value = (await getConference()) || {}
   await nextTick()
   renderCharts()
+  chartResizeObserver = new ResizeObserver(() => {
+    pieChart?.resize()
+    barChart?.resize()
+  })
+  if (pieRef.value) chartResizeObserver.observe(pieRef.value)
+  if (barRef.value) chartResizeObserver.observe(barRef.value)
 })
 
 onBeforeUnmount(() => {
+  chartResizeObserver?.disconnect()
   if (pieChart) pieChart.dispose()
   if (barChart) barChart.dispose()
 })
@@ -243,5 +257,9 @@ onBeforeUnmount(() => {
 .chart {
   height: 300px;
   width: 100%;
+}
+@media (max-width: 600px) {
+  .page-card :deep(.el-row > .el-col) { max-width: 100%; flex: 0 0 100%; }
+  .chart { height: 260px; }
 }
 </style>

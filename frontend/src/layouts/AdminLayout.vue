@@ -4,38 +4,20 @@
       <div class="logo">会议管理后台</div>
       <el-menu router :default-active="$route.path" background-color="#001529" text-color="#a6adb4"
                active-text-color="#fff">
-        <el-menu-item index="/admin">
-          <el-icon><DataAnalysis /></el-icon><span>仪表盘</span>
-        </el-menu-item>
-        <el-menu-item index="/admin/users">
-          <el-icon><User /></el-icon><span>用户管理</span>
-        </el-menu-item>
-        <el-menu-item index="/admin/papers">
-          <el-icon><Document /></el-icon><span>论文管理</span>
-        </el-menu-item>
-        <el-menu-item index="/admin/topics">
-          <el-icon><Collection /></el-icon><span>专题管理</span>
-        </el-menu-item>
-        <el-menu-item index="/admin/keynotes">
-          <el-icon><Microphone /></el-icon><span>主旨报告管理</span>
-        </el-menu-item>
-        <el-menu-item index="/admin/schedule">
-          <el-icon><Calendar /></el-icon><span>日程管理</span>
-        </el-menu-item>
-        <el-menu-item index="/admin/notifications">
-          <el-icon><Bell /></el-icon><span>通知管理</span>
-        </el-menu-item>
-        <el-menu-item index="/admin/materials">
-          <el-icon><FolderOpened /></el-icon><span>资料管理</span>
-        </el-menu-item>
-        <el-menu-item index="/admin/logs">
-          <el-icon><Tickets /></el-icon><span>操作日志</span>
+        <el-menu-item v-for="item in navItems" :key="item.path" :index="item.path">
+          <el-icon><component :is="item.icon" /></el-icon><span>{{ item.label }}</span>
         </el-menu-item>
       </el-menu>
     </el-aside>
     <el-container>
       <el-header class="topbar">
-        <span>欢迎,{{ store.realName }}</span>
+        <div class="topbar-leading">
+          <el-button class="mobile-nav-toggle" text aria-label="打开后台菜单" @click="mobileMenuOpen = true">
+            <el-icon :size="22"><Menu /></el-icon>
+          </el-button>
+          <span class="welcome-name">欢迎,{{ store.realName }}</span>
+          <span class="mobile-title">会议管理后台</span>
+        </div>
         <div>
           <el-button text @click="$router.push('/')">
             <el-icon><HomeFilled /></el-icon> 前台首页
@@ -47,16 +29,37 @@
         <router-view />
       </el-main>
     </el-container>
+    <el-drawer v-model="mobileMenuOpen" title="会议管理后台" direction="ltr" size="min(300px, 85vw)">
+      <el-menu router :default-active="$route.path" @select="mobileMenuOpen = false">
+        <el-menu-item v-for="item in navItems" :key="item.path" :index="item.path">
+          <el-icon><component :is="item.icon" /></el-icon><span>{{ item.label }}</span>
+        </el-menu-item>
+      </el-menu>
+    </el-drawer>
   </el-container>
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
+import { DataAnalysis, User, Document, Collection, Microphone, Calendar, Bell, FolderOpened, Tickets } from '@element-plus/icons-vue'
 import { useUserStore } from '../stores/user'
 
 const router = useRouter()
 const store = useUserStore()
+const mobileMenuOpen = ref(false)
+const navItems = [
+  { path: '/admin', label: '仪表盘', icon: DataAnalysis },
+  { path: '/admin/users', label: '用户管理', icon: User },
+  { path: '/admin/papers', label: '论文管理', icon: Document },
+  { path: '/admin/topics', label: '专题管理', icon: Collection },
+  { path: '/admin/keynotes', label: '主旨报告管理', icon: Microphone },
+  { path: '/admin/schedule', label: '日程管理', icon: Calendar },
+  { path: '/admin/notifications', label: '通知管理', icon: Bell },
+  { path: '/admin/materials', label: '资料管理', icon: FolderOpened },
+  { path: '/admin/logs', label: '操作日志', icon: Tickets }
+]
 
 function logout() {
   store.logout()
@@ -69,6 +72,7 @@ function logout() {
 .admin-layout {
   min-height: 100vh;
 }
+.admin-layout > .el-container { min-width: 0; }
 .aside {
   background: #001529;
 }
@@ -92,5 +96,16 @@ function logout() {
 }
 .content {
   background: #f5f7fa;
+  min-width: 0;
+}
+.topbar-leading { display: flex; align-items: center; gap: 8px; }
+.mobile-nav-toggle, .mobile-title { display: none; }
+@media (max-width: 900px) {
+  .aside { display: none; }
+  .mobile-nav-toggle { display: inline-flex; }
+  .mobile-title { display: inline; font-weight: 600; }
+  .welcome-name { display: none; }
+  .topbar { padding: 0 12px; }
+  .content { padding: 12px; }
 }
 </style>

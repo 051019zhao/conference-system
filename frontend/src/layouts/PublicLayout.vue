@@ -2,11 +2,11 @@
   <div class="public-layout">
     <header class="header">
       <div class="header-inner">
-        <div class="brand" @click="$router.push('/')">
+        <router-link class="brand" to="/">
           <el-icon :size="24"><School /></el-icon>
           <span>{{ conference.shortName || '会议管理系统' }}</span>
-        </div>
-        <el-menu mode="horizontal" router :default-active="$route.path" class="nav" :ellipsis="false">
+        </router-link>
+        <el-menu mode="horizontal" router :default-active="$route.path" class="nav desktop-nav" :ellipsis="false">
           <el-menu-item index="/">首页</el-menu-item>
           <el-menu-item index="/cfp">征文</el-menu-item>
           <el-menu-item index="/experts">专家介绍</el-menu-item>
@@ -16,6 +16,9 @@
           <el-menu-item index="/notifications">通知</el-menu-item>
           <el-menu-item index="/materials">资料下载</el-menu-item>
         </el-menu>
+        <el-button class="mobile-nav-toggle" text aria-label="打开导航菜单" @click="mobileMenuOpen = true">
+          <el-icon :size="22"><Menu /></el-icon>
+        </el-button>
         <div class="user-area">
           <template v-if="store.isLogin">
             <el-dropdown @command="handleCommand">
@@ -23,7 +26,7 @@
                 <el-avatar :size="28" :src="avatarUrl" @error="avatarUrl = ''" class="top-avatar">
                   {{ store.realName?.charAt(0) }}
                 </el-avatar>
-                {{ store.realName }}({{ roleText[store.role] }})
+                <span class="user-name">{{ store.realName }}<span class="role-label">({{ roleText[store.role] }})</span></span>
                 <el-icon><ArrowDown /></el-icon>
               </span>
               <template #dropdown>
@@ -44,6 +47,19 @@
         </div>
       </div>
     </header>
+
+    <el-drawer v-model="mobileMenuOpen" title="会议导航" direction="ltr" size="min(320px, 86vw)">
+      <el-menu router :default-active="$route.path" @select="mobileMenuOpen = false">
+        <el-menu-item index="/">首页</el-menu-item>
+        <el-menu-item index="/cfp">征文</el-menu-item>
+        <el-menu-item index="/experts">专家介绍</el-menu-item>
+        <el-menu-item index="/keynotes">主旨报告</el-menu-item>
+        <el-menu-item index="/schedule">会议日程</el-menu-item>
+        <el-menu-item index="/accepted">录用论文</el-menu-item>
+        <el-menu-item index="/notifications">通知</el-menu-item>
+        <el-menu-item index="/materials">资料下载</el-menu-item>
+      </el-menu>
+    </el-drawer>
 
     <main class="main">
       <div class="main-inner">
@@ -72,6 +88,7 @@ import AiChat from '../components/AiChat.vue'
 const router = useRouter()
 const store = useUserStore()
 const conference = ref({})
+const mobileMenuOpen = ref(false)
 const avatarUrl = ref(store.isLogin ? `/api/public/avatar/${store.user?.id}` : '')
 
 onMounted(async () => {
@@ -118,6 +135,7 @@ function handleCommand(command) {
   display: flex;
   align-items: center;
   padding: 0 16px;
+  min-height: 64px;
 }
 .brand {
   display: flex;
@@ -129,6 +147,12 @@ function handleCommand(command) {
   cursor: pointer;
   white-space: nowrap;
   margin-right: 12px;
+  text-decoration: none;
+  min-width: 0;
+}
+.brand span {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .nav {
   flex: 1;
@@ -139,6 +163,9 @@ function handleCommand(command) {
   display: flex;
   align-items: center;
   gap: 4px;
+}
+.mobile-nav-toggle {
+  display: none;
 }
 .user-entry {
   display: flex;
@@ -165,5 +192,19 @@ function handleCommand(command) {
   color: #909399;
   padding: 18px 0;
   font-size: 13px;
+}
+@media (max-width: 1000px) {
+  .desktop-nav { display: none; }
+  .brand { flex: 1; }
+  .mobile-nav-toggle { display: inline-flex; flex-shrink: 0; }
+  .user-name { display: inline-block; max-width: 100px; overflow: hidden; text-overflow: ellipsis; }
+}
+@media (max-width: 480px) {
+  .header-inner { padding: 0 12px; min-height: 56px; }
+  .brand { font-size: 16px; }
+  .role-label { display: none; }
+  .main { padding: 16px 0; }
+  .main-inner { padding: 0 12px; }
+  .footer { padding: 18px 12px; line-height: 1.6; }
 }
 </style>
