@@ -13,7 +13,14 @@ fi
 docker -v
 
 echo "== 2/4 启动 openGauss 容器(首次会拉取镜像,约 1-2GB,请耐心等待) =="
-docker compose up -d
+if docker inspect opengauss > /dev/null 2>&1; then
+  # Reuse the existing database volume when this project was started elsewhere.
+  if [ "$(docker inspect -f '{{.State.Running}}' opengauss)" != "true" ]; then
+    docker start opengauss
+  fi
+else
+  docker compose up -d
+fi
 
 echo "== 3/4 等待数据库就绪(首次初始化约 30-60 秒) =="
 # 该镜像 gsql 不在默认 PATH,需设置 GAUSSHOME/LD_LIBRARY_PATH

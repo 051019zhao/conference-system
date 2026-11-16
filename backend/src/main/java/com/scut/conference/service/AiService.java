@@ -40,10 +40,6 @@ public class AiService {
     @Value("${app.ai.timeout-seconds}")
     private int timeoutSeconds;
 
-    private final HttpClient httpClient = HttpClient.newBuilder()
-            .connectTimeout(Duration.ofSeconds(15))
-            .build();
-
     public boolean isReady() {
         return enabled && apiKey != null && !apiKey.isBlank();
     }
@@ -77,6 +73,10 @@ public class AiService {
                     .header("Content-Type", "application/json")
                     .header("Authorization", "Bearer " + apiKey)
                     .POST(HttpRequest.BodyPublishers.ofString(body.toString()))
+                    .build();
+            // AI is optional: do not open network resources while starting the whole application.
+            HttpClient httpClient = HttpClient.newBuilder()
+                    .connectTimeout(Duration.ofSeconds(15))
                     .build();
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() != 200) {

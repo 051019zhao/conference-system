@@ -23,16 +23,18 @@
 
 ## 环境要求
 
-- JDK 17（加入 PATH，或在 IDEA 的 Project Structure 中选择）
+- JDK 17（可设置 `JAVA_HOME`；Windows 脚本也会搜索用户目录中的 JDK 17）
 - Node.js 18+
 - Docker Desktop(跑 openGauss)
-- Maven 3.6+（加入 PATH；也可在 IDEA 中运行后端）
+- Maven 3.6+（可来自 PATH、`MAVEN_HOME` 或 IntelliJ IDEA 自带版本）
 
 ## 启动步骤
 
-### 1. 启动 openGauss(Docker Desktop 运行中)
+### 1. 启动 openGauss（先启动 Docker Desktop）
 
-**方式一(推荐,一键):** 在 `conference-system` 目录执行(Git Bash 或 CMD 均可):
+**Windows：** 直接运行下一步的 `scripts/run-backend.cmd`，脚本会自动启动或复用已有 `opengauss` 容器并等待就绪。
+
+**Git Bash/Linux：** 在项目根目录执行：
 
 ```bash
 bash setup-opengauss.sh
@@ -41,7 +43,7 @@ bash setup-opengauss.sh
 脚本会自动:启动容器 → 等待就绪 → 确保业务库存在 → 打印连接信息。
 (GS_DB 环境变量会在首次初始化时自动创建 `conference_db`。)
 
-**方式二(手动):**
+**手动启动全新容器：**
 
 ```bash
 docker run --name opengauss --privileged=true -d \
@@ -55,7 +57,7 @@ docker exec -it opengauss gsql -d postgres -c "CREATE DATABASE conference_db ENC
 
 ### 2. 启动后端(backend/)
 
-**方式一(Windows):** `scripts/run-backend.cmd`（需要 JDK 17 与 Maven 在 PATH 中，日志输出在终端）
+**方式一(Windows):** 启动 Docker Desktop 后运行 `scripts/run-backend.cmd`（自动启动或复用数据库容器、检测 JDK 17 和 Maven；可先运行 `scripts/run-backend.cmd --check`，日志输出在终端）
 
 **方式二(IDEA):** 打开 `backend` 目录,Project SDK 选 JDK 17,运行 `ConferenceApplication`
 
