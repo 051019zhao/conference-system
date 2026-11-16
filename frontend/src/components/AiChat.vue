@@ -1,13 +1,13 @@
 <template>
   <div>
-    <el-button class="chat-fab" type="primary" circle size="large" @click="visible = true" title="智能会议助手">
-      <el-icon :size="22"><ChatDotRound /></el-icon>
+    <el-button class="chat-fab" type="primary" size="large" @click="visible = true" aria-label="打开会议助手">
+      <el-icon :size="18"><ChatDotRound /></el-icon><span>会议助手</span>
     </el-button>
 
-    <el-drawer v-model="visible" title="智能会议助手(AI)" size="380px" :append-to-body="true">
+    <el-drawer v-model="visible" title="会议助手" size="380px" :append-to-body="true">
       <div class="chat-box">
         <el-alert type="info" :closable="false" show-icon style="margin-bottom: 10px"
-                  title="基于本会议数据库资料的 AI 问答,回答仅供参考" />
+                  title="根据本会议资料提供智能问答，回答仅供参考" />
         <div ref="listRef" class="msg-list">
           <div v-for="(m, i) in messages" :key="i" class="msg-row" :class="m.role">
             <div class="bubble">{{ m.content }}</div>
@@ -73,6 +73,10 @@ async function send() {
   bottom: 32px;
   z-index: 2000;
   box-shadow: 0 7px 20px rgba(24, 59, 73, 0.25);
+  border-radius: 4px;
+  padding: 0 16px;
+  height: 44px;
+  gap: 6px;
 }
 .chat-box {
   display: flex;
