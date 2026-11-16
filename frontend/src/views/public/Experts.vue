@@ -1,9 +1,10 @@
 <template>
   <div>
-    <div class="page-title">专家介绍</div>
+    <div class="section-kicker">SCIENTIFIC COMMITTEE</div>
+    <h1 class="page-title">专家介绍</h1>
     <el-row :gutter="16">
       <el-col v-for="e in experts" :key="e.userId" :xs="24" :sm="12" :lg="8">
-        <el-card class="expert-card" shadow="hover">
+        <el-card class="expert-card" shadow="never">
           <div class="expert-head">
             <el-avatar :size="56" :src="`/api/public/avatar/${e.userId}`" @error="e.avatarFailed = true">
               {{ e.avatarFailed ? e.realName?.charAt(0) : '' }}
@@ -53,9 +54,13 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+.section-kicker { color: #a17f59; font-size: 11px; font-weight: 700; letter-spacing: .18em; margin-bottom: 9px; }
 .expert-card {
   margin-bottom: 16px;
+  height: calc(100% - 16px);
+  border-top: 3px solid #b3926d;
 }
+.expert-card :deep(.el-card__body) { padding: 25px; }
 .expert-head {
   display: flex;
   gap: 12px;
@@ -63,26 +68,30 @@ onMounted(async () => {
   margin-bottom: 12px;
 }
 .expert-name {
-  font-size: 17px;
-  font-weight: 600;
+  font-family: Georgia, 'Songti SC', SimSun, serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1d3d4a;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 .expert-title {
-  color: #909399;
+  color: #72848b;
   font-size: 13px;
   margin-top: 4px;
 }
 .expert-keywords {
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 .expert-keywords .el-tag {
   margin-right: 6px;
 }
 .expert-bio {
-  color: #606266;
+  color: #536770;
   font-size: 14px;
-  line-height: 1.7;
+  line-height: 1.85;
 }
+.expert-card a { color: #245466; font-size: 13px; font-weight: 700; text-decoration: none; display: inline-block; margin-top: 14px; }
+.expert-card a:hover { color: #9a7654; }
 </style>

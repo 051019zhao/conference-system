@@ -155,6 +155,7 @@ function renderCharts() {
   if (pieRef.value) {
     pieChart = echarts.init(pieRef.value)
     pieChart.setOption({
+      color: ['#245466', '#b3926d', '#6d8a83', '#8b9fa7', '#c5c9bc'],
       tooltip: { trigger: 'item' },
       legend: { bottom: 0 },
       series: [{
@@ -183,7 +184,7 @@ function renderCharts() {
       grid: { left: 40, right: 20, top: 20, bottom: 50 },
       xAxis: { type: 'category', data: Object.keys(agg), axisLabel: { interval: 0, rotate: 18 } },
       yAxis: { type: 'value', minInterval: 1 },
-      series: [{ type: 'bar', barMaxWidth: 42, itemStyle: { borderRadius: [4, 4, 0, 0], color: '#409eff' }, data: Object.values(agg) }]
+      series: [{ type: 'bar', barMaxWidth: 42, itemStyle: { borderRadius: [4, 4, 0, 0], color: '#245466' }, data: Object.values(agg) }]
     })
   }
 }
@@ -239,14 +240,16 @@ onBeforeUnmount(() => {
 <style scoped>
 .stat {
   text-align: center;
+  border-top: 3px solid #b3926d;
 }
 .num {
   font-size: 30px;
   font-weight: 700;
-  color: #409eff;
+  color: #1d4555;
+  font-family: Georgia, serif;
 }
 .label {
-  color: #909399;
+  color: #788a91;
   margin-top: 4px;
 }
 .bar-row {

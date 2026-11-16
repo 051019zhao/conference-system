@@ -2,7 +2,7 @@
   <el-container class="admin-layout">
     <el-aside width="220px" class="aside">
       <div class="logo">会议管理后台</div>
-      <el-menu router :default-active="$route.path" background-color="#001529" text-color="#a6adb4"
+      <el-menu router :default-active="$route.path" background-color="#17313e" text-color="#b9c7ca"
                active-text-color="#fff">
         <el-menu-item v-for="item in navItems" :key="item.path" :index="item.path">
           <el-icon><component :is="item.icon" /></el-icon><span>{{ item.label }}</span>
@@ -74,7 +74,7 @@ function logout() {
 }
 .admin-layout > .el-container { min-width: 0; }
 .aside {
-  background: #001529;
+  background: #17313e;
 }
 .logo {
   color: #fff;
@@ -82,20 +82,23 @@ function logout() {
   font-weight: 700;
   text-align: center;
   padding: 20px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  font-family: Georgia, 'Songti SC', SimSun, serif;
 }
 .aside :deep(.el-menu) {
   border-right: none;
 }
+.aside :deep(.el-menu-item.is-active) { background: #245061; border-left: 3px solid #c5a57b; }
+.aside :deep(.el-menu-item:hover) { background: #214451; }
 .topbar {
   background: #fff;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+  border-bottom: 1px solid #e4e9e7;
 }
 .content {
-  background: #f5f7fa;
+  background: #f5f5f2;
   min-width: 0;
 }
 .topbar-leading { display: flex; align-items: center; gap: 8px; }

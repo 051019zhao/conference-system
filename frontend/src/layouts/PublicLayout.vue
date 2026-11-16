@@ -3,8 +3,8 @@
     <header class="header">
       <div class="header-inner">
         <router-link class="brand" to="/">
-          <el-icon :size="24"><School /></el-icon>
-          <span>{{ conference.shortName || '会议管理系统' }}</span>
+          <span class="brand-mark" aria-hidden="true">S</span>
+          <span class="brand-name">{{ conference.shortName || '会议管理系统' }}</span>
         </router-link>
         <el-menu mode="horizontal" router :default-active="$route.path" class="nav desktop-nav" :ellipsis="false">
           <el-menu-item index="/">首页</el-menu-item>
@@ -124,10 +124,16 @@ function handleCommand(command) {
 }
 .header {
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+  border-bottom: 1px solid #e4e9e7;
   position: sticky;
   top: 0;
   z-index: 100;
+}
+.header::before {
+  content: '';
+  display: block;
+  height: 3px;
+  background: #b3926d;
 }
 .header-inner {
   max-width: 1200px;
@@ -135,28 +141,51 @@ function handleCommand(command) {
   display: flex;
   align-items: center;
   padding: 0 16px;
-  min-height: 64px;
+  min-height: 72px;
 }
 .brand {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 18px;
+  gap: 10px;
+  font-size: 19px;
   font-weight: 700;
-  color: #409eff;
+  color: #1a3c4b;
   cursor: pointer;
   white-space: nowrap;
   margin-right: 12px;
   text-decoration: none;
   min-width: 0;
 }
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid #b3926d;
+  color: #9d7650;
+  font: 700 22px Georgia, serif;
+  flex-shrink: 0;
+}
 .brand span {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.brand .brand-mark { overflow: visible; }
 .nav {
   flex: 1;
   border-bottom: none;
+}
+.nav :deep(.el-menu-item) {
+  color: #5f7078;
+  font-size: 14px;
+  padding: 0 13px;
+  border-bottom: 2px solid transparent;
+}
+.nav :deep(.el-menu-item:hover) { color: #193f50; background: transparent; }
+.nav :deep(.el-menu-item.is-active) {
+  color: #193f50;
+  border-bottom-color: #b3926d;
+  font-weight: 700;
 }
 .user-area {
   white-space: nowrap;
@@ -175,12 +204,12 @@ function handleCommand(command) {
   color: #303133;
 }
 .top-avatar {
-  background: #409eff;
+  background: #245466;
   flex-shrink: 0;
 }
 .main {
   flex: 1;
-  padding: 24px 0;
+  padding: 36px 0 48px;
 }
 .main-inner {
   max-width: 1200px;
@@ -189,9 +218,11 @@ function handleCommand(command) {
 }
 .footer {
   text-align: center;
-  color: #909399;
-  padding: 18px 0;
+  color: #b7c5c8;
+  background: #17313e;
+  padding: 28px 12px;
   font-size: 13px;
+  letter-spacing: 0.02em;
 }
 @media (max-width: 1000px) {
   .desktop-nav { display: none; }
@@ -200,8 +231,9 @@ function handleCommand(command) {
   .user-name { display: inline-block; max-width: 100px; overflow: hidden; text-overflow: ellipsis; }
 }
 @media (max-width: 480px) {
-  .header-inner { padding: 0 12px; min-height: 56px; }
+  .header-inner { padding: 0 12px; min-height: 58px; }
   .brand { font-size: 16px; }
+  .brand-mark { width: 28px; height: 28px; font-size: 19px; }
   .role-label { display: none; }
   .main { padding: 16px 0; }
   .main-inner { padding: 0 12px; }

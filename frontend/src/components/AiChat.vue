@@ -72,7 +72,7 @@ async function send() {
   right: 24px;
   bottom: 32px;
   z-index: 2000;
-  box-shadow: 0 4px 14px rgba(64, 158, 255, 0.45);
+  box-shadow: 0 7px 20px rgba(24, 59, 73, 0.25);
 }
 .chat-box {
   display: flex;
@@ -105,7 +105,7 @@ async function send() {
   color: #303133;
 }
 .msg-row.user .bubble {
-  background: #409eff;
+  background: #245466;
   color: #fff;
 }
 .typing {

@@ -1,7 +1,9 @@
 <template>
   <div class="login-wrap">
     <el-card class="login-card">
-      <div class="login-title">账号登录</div>
+      <div class="auth-kicker">SEDB 2026 · ACCOUNT</div>
+      <h1 class="login-title">登录会议系统</h1>
+      <p class="login-subtitle">作者、评审专家与管理员使用同一入口</p>
       <el-form ref="formRef" :model="form" :rules="rules" label-width="0" size="large">
         <el-form-item prop="username">
           <el-input v-model="form.username" placeholder="用户名" :prefix-icon="User" />
@@ -148,17 +150,24 @@ async function handleLogin() {
 .login-wrap {
   display: flex;
   justify-content: center;
-  padding: 48px 0;
+  padding: 52px 0 80px;
 }
 .login-card {
-  width: 400px;
+  width: min(440px, 100%);
+  border-top: 3px solid #b3926d;
+  box-shadow: 0 16px 38px rgba(25, 53, 68, .06);
 }
+.login-card :deep(.el-card__body) { padding: 38px; }
+.auth-kicker { text-align: center; color: #a17f59; font-size: 11px; font-weight: 700; letter-spacing: .18em; margin-bottom: 12px; }
 .login-title {
-  font-size: 20px;
-  font-weight: 600;
+  font-family: Georgia, 'Songti SC', SimSun, serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: #1c3b48;
   text-align: center;
-  margin-bottom: 24px;
+  margin-bottom: 6px;
 }
+.login-subtitle { color: #829198; text-align: center; font-size: 13px; margin-bottom: 28px; }
 .login-btn {
   width: 100%;
 }
@@ -167,6 +176,10 @@ async function handleLogin() {
   margin-top: 16px;
   color: #909399;
   font-size: 14px;
+}
+@media (max-width: 600px) {
+  .login-wrap { padding: 22px 0 40px; }
+  .login-card :deep(.el-card__body) { padding: 28px 22px; }
 }
 .divider {
   margin: 0 8px;

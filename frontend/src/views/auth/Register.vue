@@ -1,7 +1,9 @@
 <template>
   <div class="reg-wrap">
     <el-card class="reg-card">
-      <div class="reg-title">注册作者账号</div>
+      <div class="auth-kicker">SEDB 2026 · AUTHOR ACCOUNT</div>
+      <h1 class="reg-title">注册作者账号</h1>
+      <p class="reg-subtitle">注册后需等待管理员审核通过</p>
       <el-form ref="formRef" :model="form" :rules="rules" label-width="90px">
         <el-form-item label="用户名" prop="username">
           <el-input v-model="form.username" placeholder="3-20 位,登录使用" />
@@ -128,17 +130,24 @@ async function handleRegister() {
 .reg-wrap {
   display: flex;
   justify-content: center;
-  padding: 32px 0;
+  padding: 42px 0 70px;
 }
 .reg-card {
-  width: 520px;
+  width: min(540px, 100%);
+  border-top: 3px solid #b3926d;
+  box-shadow: 0 16px 38px rgba(25, 53, 68, .06);
 }
+.reg-card :deep(.el-card__body) { padding: 38px; }
+.auth-kicker { text-align: center; color: #a17f59; font-size: 11px; font-weight: 700; letter-spacing: .18em; margin-bottom: 12px; }
 .reg-title {
-  font-size: 20px;
-  font-weight: 600;
+  font-family: Georgia, 'Songti SC', SimSun, serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: #1c3b48;
   text-align: center;
-  margin-bottom: 24px;
+  margin-bottom: 6px;
 }
+.reg-subtitle { text-align: center; color: #829198; font-size: 13px; margin-bottom: 28px; }
 .code-row {
   display: flex;
   gap: 8px;
@@ -152,5 +161,10 @@ async function handleRegister() {
   margin-top: 14px;
   color: #909399;
   font-size: 14px;
+}
+@media (max-width: 600px) {
+  .reg-wrap { padding: 20px 0 38px; }
+  .reg-card :deep(.el-card__body) { padding: 28px 18px; }
+  .reg-card :deep(.el-form-item__label) { justify-content: flex-start; }
 }
 </style>
