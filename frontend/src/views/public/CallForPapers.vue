@@ -11,7 +11,7 @@
         <div class="date-item"><span>会议日期</span><strong>{{ conference.startDate || '待公布' }} — {{ conference.endDate || '待公布' }}</strong></div>
       </div>
       <div class="conference-meta">地点：{{ conference.venue || '待公布' }} · 联系邮箱：{{ conference.contactEmail || '待公布' }}</div>
-      <el-button link type="primary" @click="$router.push('/materials')">查看会议资料下载区</el-button>
+      <el-button link type="primary" @click="$router.push('/notifications#materials')">查看会议资料下载区</el-button>
     </div>
     <div class="page-card topics-section">
       <div class="section-kicker">RESEARCH TRACKS</div>

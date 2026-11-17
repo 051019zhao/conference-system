@@ -31,12 +31,14 @@
       </el-col>
     </el-row>
     <el-empty v-if="experts.length === 0" description="暂无专家信息" />
+    <section id="reports" class="reports-section"><Keynotes embedded /></section>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import { getPublicExperts } from '../../api'
+import Keynotes from './Keynotes.vue'
 
 const experts = ref([])
 
@@ -94,4 +96,5 @@ onMounted(async () => {
 }
 .expert-card a { color: #245466; font-size: 13px; font-weight: 700; text-decoration: none; display: inline-block; margin-top: 14px; }
 .expert-card a:hover { color: #9a7654; }
+.reports-section { margin-top: 52px; padding-top: 28px; border-top: 1px solid #d7dfdc; scroll-margin-top: 100px; }
 </style>

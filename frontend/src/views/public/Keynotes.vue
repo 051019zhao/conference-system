@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="section-kicker">KEYNOTE TALKS</div>
-    <h1 class="page-title">主旨报告</h1>
+    <component :is="embedded ? 'h2' : 'h1'" class="page-title">主旨报告</component>
     <el-empty v-if="keynotes.length === 0" description="暂无主旨报告" />
     <div class="keynote-grid">
     <el-card v-for="(k, index) in keynotes" :key="k.id" class="keynote-card" shadow="never">
@@ -22,6 +22,8 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { getKeynotes } from '../../api'
+
+defineProps({ embedded: { type: Boolean, default: false } })
 
 const keynotes = ref([])
 

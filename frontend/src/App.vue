@@ -60,6 +60,18 @@ body {
 .el-drawer__header { border-bottom: 1px solid #e8ecea; padding-bottom: 18px; }
 .el-drawer__title { font-weight: 700; color: #193544; }
 .el-empty__description p { color: #819097; }
+a:focus-visible, button:focus-visible { outline: 2px solid #b3926d; outline-offset: 3px; }
+.ripple-surface { position: relative; overflow: hidden; }
+.ink-ripple {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: 50%;
+  background: var(--ripple-color, rgba(177, 141, 93, .26));
+  transform: scale(0);
+  animation: ink-burst .58s ease-out forwards;
+}
+@keyframes ink-burst { to { transform: scale(1); opacity: 0; } }
 ::selection { background: #cfdee0; color: #183c4a; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; }

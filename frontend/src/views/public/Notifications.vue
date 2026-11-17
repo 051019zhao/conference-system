@@ -12,6 +12,7 @@
         <el-icon class="notice-arrow"><ArrowRight /></el-icon>
       </router-link>
     </div>
+    <section id="materials" class="materials-section"><Materials embedded /></section>
   </div>
 </template>
 
@@ -19,6 +20,7 @@
 import { ref, onMounted } from 'vue'
 import { getNotifications } from '../../api'
 import { formatDateTime } from '../../utils/format'
+import Materials from './Materials.vue'
 
 const list = ref([])
 
@@ -49,6 +51,7 @@ onMounted(async () => {
   color: #89979c;
   font-size: 12px;
 }
+.materials-section { margin-top: 52px; padding-top: 28px; border-top: 1px solid #d7dfdc; scroll-margin-top: 100px; }
 @media (max-width: 600px) {
   .notice-item { grid-template-columns: 30px minmax(0, 1fr) 18px; gap: 8px; }
   .notice-time { grid-column: 2; grid-row: 2; }

@@ -6,15 +6,12 @@
           <span class="brand-mark" aria-hidden="true">S</span>
           <span class="brand-name">{{ conference.shortName || '会议管理系统' }}</span>
         </router-link>
-        <el-menu mode="horizontal" router :default-active="$route.path" class="nav desktop-nav" :ellipsis="false">
+        <el-menu mode="horizontal" router :default-active="activeNav" class="nav desktop-nav" :ellipsis="false">
           <el-menu-item index="/">首页</el-menu-item>
-          <el-menu-item index="/cfp">征文</el-menu-item>
-          <el-menu-item index="/experts">专家介绍</el-menu-item>
-          <el-menu-item index="/keynotes">主旨报告</el-menu-item>
-          <el-menu-item index="/schedule">会议日程</el-menu-item>
+          <el-menu-item index="/cfp">征文投稿</el-menu-item>
+          <el-menu-item index="/experts">专家与报告</el-menu-item>
           <el-menu-item index="/accepted">录用论文</el-menu-item>
-          <el-menu-item index="/notifications">通知</el-menu-item>
-          <el-menu-item index="/materials">资料下载</el-menu-item>
+          <el-menu-item index="/notifications">通知与资料</el-menu-item>
         </el-menu>
         <el-button class="mobile-nav-toggle" text aria-label="打开导航菜单" @click="mobileMenuOpen = true">
           <el-icon :size="22"><Menu /></el-icon>
@@ -49,21 +46,22 @@
     </header>
 
     <el-drawer v-model="mobileMenuOpen" title="会议导航" direction="ltr" size="min(320px, 86vw)">
-      <el-menu router :default-active="$route.path" @select="mobileMenuOpen = false">
+      <el-menu router :default-active="activeNav" @select="mobileMenuOpen = false">
         <el-menu-item index="/">首页</el-menu-item>
-        <el-menu-item index="/cfp">征文</el-menu-item>
-        <el-menu-item index="/experts">专家介绍</el-menu-item>
-        <el-menu-item index="/keynotes">主旨报告</el-menu-item>
-        <el-menu-item index="/schedule">会议日程</el-menu-item>
+        <el-menu-item index="/cfp">征文投稿</el-menu-item>
+        <el-menu-item index="/experts">专家与报告</el-menu-item>
         <el-menu-item index="/accepted">录用论文</el-menu-item>
-        <el-menu-item index="/notifications">通知</el-menu-item>
-        <el-menu-item index="/materials">资料下载</el-menu-item>
+        <el-menu-item index="/notifications">通知与资料</el-menu-item>
       </el-menu>
     </el-drawer>
 
     <main class="main">
       <div class="main-inner">
-        <router-view />
+        <router-view v-slot="{ Component }">
+          <Transition name="page" mode="out-in">
+            <component :is="Component" :key="$route.path" />
+          </Transition>
+        </router-view>
       </div>
     </main>
 
@@ -78,7 +76,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { useUserStore } from '../stores/user'
 import { getConference } from '../api'
@@ -86,9 +84,16 @@ import { roleText } from '../utils/format'
 import AiChat from '../components/AiChat.vue'
 
 const router = useRouter()
+const route = useRoute()
 const store = useUserStore()
 const conference = ref({})
 const mobileMenuOpen = ref(false)
+const activeNav = computed(() => {
+  if (route.path === '/keynotes') return '/experts'
+  if (route.path === '/materials' || route.path.startsWith('/notifications/')) return '/notifications'
+  if (route.path === '/schedule') return '/'
+  return route.path
+})
 const avatarUrl = ref(store.isLogin ? `/api/public/avatar/${store.user?.id}` : '')
 
 onMounted(async () => {
@@ -176,15 +181,30 @@ function handleCommand(command) {
   border-bottom: none;
 }
 .nav :deep(.el-menu-item) {
+  position: relative;
   color: #5f7078;
   font-size: 14px;
   padding: 0 13px;
   border-bottom: 2px solid transparent;
+  transition: color .22s ease;
+}
+.nav :deep(.el-menu-item::after) {
+  content: '';
+  position: absolute;
+  left: 13px;
+  right: 13px;
+  bottom: -2px;
+  height: 2px;
+  background: #b3926d;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform .24s ease;
 }
 .nav :deep(.el-menu-item:hover) { color: #193f50; background: transparent; }
+.nav :deep(.el-menu-item:hover::after),
+.nav :deep(.el-menu-item.is-active::after) { transform: scaleX(1); }
 .nav :deep(.el-menu-item.is-active) {
   color: #193f50;
-  border-bottom-color: #b3926d;
   font-weight: 700;
 }
 .user-area {
@@ -216,6 +236,9 @@ function handleCommand(command) {
   margin: 0 auto;
   padding: 0 16px;
 }
+.page-enter-active, .page-leave-active { transition: opacity .24s ease, transform .24s ease; }
+.page-enter-from { opacity: 0; transform: translateY(10px); }
+.page-leave-to { opacity: 0; transform: translateY(-6px); }
 .footer {
   text-align: center;
   color: #b7c5c8;
@@ -238,5 +261,8 @@ function handleCommand(command) {
   .main { padding: 16px 0; }
   .main-inner { padding: 0 12px; }
   .footer { padding: 18px 12px; line-height: 1.6; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .page-enter-active, .page-leave-active { transition: none; }
 }
 </style>

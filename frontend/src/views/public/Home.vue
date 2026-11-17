@@ -1,35 +1,28 @@
 <template>
   <div class="home-page">
-    <section class="hero" aria-labelledby="conference-title">
+    <section class="hero" aria-labelledby="conference-title" @pointermove="moveHeroArt" @pointerleave="resetHeroArt">
+      <div class="hero-art" aria-hidden="true">
+        <img src="/conference-constellation.svg" alt="" />
+      </div>
       <div class="hero-copy">
+        <div class="hero-masthead"><span>学术会议 · 广州</span><span>NO. 2026 / SEDB</span></div>
         <div class="eyebrow"><span class="eyebrow-line"></span> {{ conference.shortName || 'SEDB 2026' }} · ACADEMIC CONFERENCE</div>
         <h1 id="conference-title" class="hero-title">{{ conference.name || '会议加载中…' }}</h1>
         <p class="hero-intro">{{ conference.intro }}</p>
         <div class="hero-actions">
-          <el-button type="primary" size="large" @click="goToSubmit">在线投稿 <el-icon><ArrowRight /></el-icon></el-button>
-          <el-button size="large" @click="$router.push('/cfp')">查看征文通知</el-button>
+          <el-button v-ripple type="primary" size="large" @click="goToSubmit">在线投稿 <el-icon><ArrowRight /></el-icon></el-button>
+          <el-button v-ripple size="large" @click="$router.push('/cfp')">查看征文通知</el-button>
         </div>
-      </div>
-      <div class="hero-detail">
-        <div class="detail-label">会议概要 / CONFERENCE</div>
-        <div class="detail-row">
-          <span>举办日期</span>
-          <strong>{{ formatDate(conference.startDate) }} — {{ formatDate(conference.endDate) }}</strong>
-        </div>
-        <div class="detail-row">
-          <span>会议地点</span>
-          <strong>{{ conference.venue || '待公布' }}</strong>
-        </div>
-        <div class="detail-row">
-          <span>投稿截止</span>
-          <strong>{{ formatDate(conference.submitDeadline) }}</strong>
-        </div>
-        <div v-if="countdown !== null || submitDaysLeft !== null" class="detail-countdown">
-          <span v-if="countdown !== null">距会议开幕 <b>{{ countdown }}</b> 天</span>
-          <span v-if="submitDaysLeft !== null">{{ submitDaysLeft > 0 ? `距投稿截止 ${submitDaysLeft} 天` : '投稿已截止' }}</span>
-        </div>
+        <div class="hero-footnote"><span class="footnote-rule"></span> 探索软件工程与数据库技术的交汇处</div>
       </div>
     </section>
+
+    <div class="hero-detail" aria-label="会议概要">
+      <div class="detail-row"><span>01 / 举办日期</span><strong>{{ formatDate(conference.startDate) }} — {{ formatDate(conference.endDate) }}</strong></div>
+      <div class="detail-row"><span>02 / 会议地点</span><strong>{{ conference.venue || '待公布' }}</strong></div>
+      <div class="detail-row"><span>03 / 投稿截止</span><strong>{{ formatDate(conference.submitDeadline) }}</strong></div>
+      <div class="detail-countdown"><span v-if="countdown !== null">开幕倒计时</span><strong v-if="countdown !== null">{{ countdown }} <small>天</small></strong><span v-else>会议日程</span><strong v-if="countdown === null">敬请关注</strong></div>
+    </div>
 
     <div v-if="organizations.length" class="organizers">
       <a v-for="item in organizations" :key="item.label" :href="safeUrl(item.url) || undefined"
@@ -60,10 +53,47 @@
       </el-col>
     </el-row>
 
+    <div class="home-content-grid">
+      <div class="home-main">
+    <section v-if="topics.length" class="tracks-section" aria-labelledby="tracks-title">
+      <div class="editorial-heading">
+        <div class="heading-number">01 <span>/</span> RESEARCH TRACKS</div>
+        <div class="heading-main">
+          <div><h2 id="tracks-title">研究方向</h2><p>从基础理论到工程实践，探索值得讨论的问题。</p></div>
+          <router-link to="/cfp" class="section-link">查看全部专题 <el-icon><ArrowRight /></el-icon></router-link>
+        </div>
+      </div>
+      <div class="track-grid">
+        <router-link v-for="(topic, index) in topics.slice(0, 4)" :key="topic.id" v-ripple class="track-card" :to="'/cfp'">
+          <div class="track-top"><span>{{ String(index + 1).padStart(2, '0') }}</span><span class="track-motif" :class="`motif-${index % 4}`" aria-hidden="true"><i></i><i></i><i></i></span></div>
+          <h3>{{ topic.name }}</h3>
+          <p>{{ topic.description }}</p>
+          <span class="track-link">了解方向 <el-icon><ArrowUpRight /></el-icon></span>
+        </router-link>
+      </div>
+    </section>
+
+    <section v-if="keynotes.length" class="featured-section" aria-labelledby="featured-title">
+      <div class="editorial-heading">
+        <div class="heading-number">02 <span>/</span> KEYNOTE TALKS</div>
+        <div class="heading-main">
+          <div><h2 id="featured-title">主旨报告</h2><p>来自不同研究方向的观点，在这里交汇。</p></div>
+          <router-link to="/experts#reports" class="section-link">查看报告安排 <el-icon><ArrowRight /></el-icon></router-link>
+        </div>
+      </div>
+      <div class="featured-grid">
+        <router-link v-for="(keynote, index) in keynotes.slice(0, 2)" :key="keynote.id" v-ripple class="featured-card" to="/experts#reports">
+          <span class="featured-no">0{{ index + 1 }}</span>
+          <div class="featured-content"><span class="featured-label">KEYNOTE / {{ keynote.timeNote || '时间待定' }}</span><h3>{{ keynote.title }}</h3><p>{{ keynote.expertName }} · {{ keynote.affiliation }}</p></div>
+          <el-icon class="featured-arrow"><ArrowUpRight /></el-icon>
+        </router-link>
+      </div>
+    </section>
+
     <section class="notice-section page-card">
       <div class="section-heading">
         <div>
-          <div class="section-kicker">NEWS & UPDATES</div>
+          <div class="section-kicker">03 / NEWS & UPDATES</div>
           <h2 class="page-title">最新通知</h2>
         </div>
         <router-link class="all-notices" to="/notifications">查看全部 <el-icon><ArrowRight /></el-icon></router-link>
@@ -77,6 +107,31 @@
         <el-icon class="notice-arrow"><ArrowRight /></el-icon>
       </router-link>
     </section>
+      </div>
+
+      <aside class="home-aside" aria-label="会议日程与重要日期">
+        <section class="aside-panel" aria-labelledby="schedule-heading">
+          <div class="aside-kicker">PROGRAM / {{ conference.shortName || 'SEDB 2026' }}</div>
+          <h2 id="schedule-heading" class="aside-title">会议日程 <small>{{ formatDate(conference.startDate) }}</small></h2>
+          <p v-if="!schedulePreview.length" class="aside-empty">日程尚未发布，请稍后查看。</p>
+          <div v-for="(item, index) in schedulePreview" :key="item.id || `${item.day}-${item.startTime}-${index}`">
+            <div v-if="index === 0 || item.day !== schedulePreview[index - 1].day" class="schedule-day">{{ formatDate(item.day) }}</div>
+            <router-link v-ripple class="timeline-item" to="/schedule">
+              <span class="timeline-time">{{ item.startTime }}</span>
+              <span class="timeline-body"><strong>{{ item.title }}</strong><small>{{ item.location || '地点待定' }}</small></span>
+            </router-link>
+          </div>
+          <router-link class="schedule-more" to="/schedule">查看完整日程 <el-icon><ArrowRight /></el-icon></router-link>
+        </section>
+        <section class="deadline-panel" aria-labelledby="deadline-heading">
+          <div class="aside-kicker">IMPORTANT DATES</div>
+          <h3 id="deadline-heading">重要日期</h3>
+          <div class="deadline-row"><span>投稿截止</span><strong>{{ formatDate(conference.submitDeadline) }}</strong></div>
+          <div class="deadline-row"><span>录用通知</span><strong>{{ formatDate(conference.notifyDeadline) }}</strong></div>
+          <div class="deadline-row"><span>终稿提交</span><strong>{{ formatDate(conference.finalDeadline) }}</strong></div>
+        </section>
+      </aside>
+    </div>
   </div>
 </template>
 
@@ -84,7 +139,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { getConference, getPublicStats, getNotifications } from '../../api'
+import { getConference, getPublicStats, getNotifications, getTopics, getKeynotes, getSchedule } from '../../api'
 import { formatDate, formatDateTime } from '../../utils/format'
 import { useUserStore } from '../../stores/user'
 
@@ -93,6 +148,12 @@ const store = useUserStore()
 const conference = ref({})
 const stats = ref({})
 const notifications = ref([])
+const topics = ref([])
+const keynotes = ref([])
+const schedule = ref([])
+const schedulePreview = computed(() => [...schedule.value]
+  .sort((a, b) => `${a.day} ${a.startTime}`.localeCompare(`${b.day} ${b.startTime}`))
+  .slice(0, 5))
 const organizations = computed(() => [
   { label: '主办单位', name: conference.value.organizerName, url: conference.value.organizerUrl,
     logo: conference.value.organizerLogoUrl },
@@ -114,6 +175,20 @@ function goToSubmit() {
   router.push('/author/submit')
 }
 
+function moveHeroArt(event) {
+  if (event.pointerType === 'touch' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+  const bounds = event.currentTarget.getBoundingClientRect()
+  const x = ((event.clientX - bounds.left) / bounds.width - 0.5) * 20
+  const y = ((event.clientY - bounds.top) / bounds.height - 0.5) * 20
+  event.currentTarget.style.setProperty('--art-x', `${x}px`)
+  event.currentTarget.style.setProperty('--art-y', `${y}px`)
+}
+
+function resetHeroArt(event) {
+  event.currentTarget.style.setProperty('--art-x', '0px')
+  event.currentTarget.style.setProperty('--art-y', '0px')
+}
+
 // 开幕倒计时(天);已开幕或未配置则不显示
 const countdown = computed(() => {
   if (!conference.value.startDate) return null
@@ -121,120 +196,17 @@ const countdown = computed(() => {
   return days > 0 ? days : null
 })
 
-// 投稿截止剩余天数;未配置则不显示(截止规则由后端强制执行,这里仅展示)
-const submitDaysLeft = computed(() => {
-  if (!conference.value.submitDeadline) return null
-  return Math.ceil((new Date(conference.value.submitDeadline) - new Date()) / 86400000)
-})
-
 onMounted(async () => {
-  conference.value = (await getConference()) || {}
-  stats.value = (await getPublicStats()) || {}
-  notifications.value = (await getNotifications()) || []
+  const results = await Promise.allSettled([
+    getConference(), getPublicStats(), getNotifications(), getTopics(), getKeynotes(), getSchedule()
+  ])
+  if (results[0].status === 'fulfilled') conference.value = results[0].value || {}
+  if (results[1].status === 'fulfilled') stats.value = results[1].value || {}
+  if (results[2].status === 'fulfilled') notifications.value = results[2].value || []
+  if (results[3].status === 'fulfilled') topics.value = results[3].value || []
+  if (results[4].status === 'fulfilled') keynotes.value = results[4].value || []
+  if (results[5].status === 'fulfilled') schedule.value = results[5].value || []
 })
 </script>
 
-<style scoped>
-.hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1.55fr) minmax(290px, 0.8fr);
-  min-height: 430px;
-  background: #173642;
-  border: 1px solid #173642;
-  overflow: hidden;
-}
-.hero-copy {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 62px 64px;
-}
-.eyebrow, .section-kicker, .detail-label {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-}
-.eyebrow { display: flex; align-items: center; gap: 10px; color: #c5a57b; margin-bottom: 24px; }
-.eyebrow-line { width: 28px; height: 1px; background: #c5a57b; }
-.hero-title {
-  max-width: 690px;
-  color: #fff;
-  font-family: Georgia, 'Songti SC', SimSun, serif;
-  font-size: clamp(31px, 3.1vw, 43px);
-  font-weight: 700;
-  line-height: 1.35;
-  letter-spacing: 0.025em;
-}
-.hero-intro {
-  max-width: 620px;
-  color: #c3d0d2;
-  font-size: 15px;
-  line-height: 1.9;
-  margin-top: 24px;
-}
-.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
-.hero-actions .el-button { margin: 0; min-width: 150px; height: 44px; }
-.hero-actions :deep(.el-button--primary) { background: #c5a57b; border-color: #c5a57b; color: #15323d; }
-.hero-actions :deep(.el-button--primary:hover) { background: #d6b78f; border-color: #d6b78f; }
-.hero-actions :deep(.el-button:not(.el-button--primary)) { color: #fff; background: transparent; border-color: #9fb4b8; }
-.hero-actions :deep(.el-button:not(.el-button--primary):hover) { border-color: #fff; background: rgba(255,255,255,.08); }
-.hero-detail { background: #efede7; padding: 44px 36px; border-left: 4px solid #c5a57b; }
-.detail-label { color: #9a7654; padding-bottom: 24px; border-bottom: 1px solid #d9d8d1; }
-.detail-row { display: flex; flex-direction: column; gap: 7px; padding: 22px 0; border-bottom: 1px solid #d9d8d1; }
-.detail-row span { color: #718087; font-size: 12px; letter-spacing: .04em; }
-.detail-row strong { color: #193642; font-size: 16px; font-weight: 650; line-height: 1.55; }
-.detail-countdown { display: flex; flex-direction: column; gap: 7px; color: #47616b; font-size: 13px; padding-top: 22px; }
-.detail-countdown b { color: #9a7654; font: 700 20px Georgia, serif; }
-.organizers { display: flex; flex-wrap: wrap; gap: 14px 28px; padding: 20px 4px 0; }
-.organization { display: inline-flex; align-items: center; gap: 8px; color: #344a54; text-decoration: none; font-size: 13px; }
-.organization:hover { color: #245466; }
-.organization-label { color: #819096; font-size: 12px; }
-.organization img { max-width: 60px; max-height: 36px; object-fit: contain; }
-.stats { margin: 24px 0; background: #fff; border: 1px solid #e5e9e8; }
-.stat-card { text-align: center; padding: 23px 8px; }
-.stats .el-col + .el-col .stat-card { border-left: 1px solid #e5e9e8; }
-.stat-num { color: #1d4555; font: 700 30px Georgia, serif; }
-.stat-label { color: #718087; font-size: 13px; margin-top: 6px; }
-.notice-section { padding: 30px 36px 20px; }
-.section-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; margin-bottom: 8px; }
-.section-kicker { color: #a17f59; margin-bottom: 9px; }
-.section-heading .page-title { margin-bottom: 0; }
-.all-notices { display: inline-flex; align-items: center; gap: 5px; color: #245466; text-decoration: none; font-size: 13px; font-weight: 700; padding-bottom: 4px; }
-.all-notices:hover { color: #9a7654; }
-.notice-item { display: grid; grid-template-columns: 38px minmax(0, 1fr) auto 18px; align-items: center; gap: 14px; padding: 19px 4px; border-bottom: 1px solid #e9edeb; text-decoration: none; }
-.notice-item:last-child { border-bottom: 0; }
-.notice-index { color: #b69873; font: 700 15px Georgia, serif; }
-.notice-title { color: #263b45; font-weight: 600; }
-.notice-time { color: #88979c; font-size: 12px; }
-.notice-arrow { color: #9eb2b8; }
-.notice-item:hover .notice-title, .notice-item:hover .notice-arrow { color: #9a7654; }
-@media (max-width: 900px) {
-  .hero { grid-template-columns: 1fr; }
-  .hero-copy { padding: 48px 42px; }
-  .hero-detail { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0 20px; border-left: 0; border-top: 3px solid #c5a57b; padding: 26px 36px; }
-  .detail-label, .detail-countdown { grid-column: 1 / -1; }
-  .detail-label { padding-bottom: 14px; }
-  .detail-row { border-bottom: 0; padding: 20px 0 10px; }
-  .detail-countdown { border-top: 1px solid #d9d8d1; margin-top: 12px; padding-top: 16px; flex-direction: row; gap: 20px; }
-}
-@media (max-width: 600px) {
-  .hero-copy { padding: 38px 25px 42px; }
-  .hero-title { font-size: 29px; }
-  .hero-intro { font-size: 14px; margin-top: 18px; }
-  .hero-actions { margin-top: 24px; width: 100%; }
-  .hero-actions .el-button { flex: 1; min-width: 135px; }
-  .hero-detail { display: block; padding: 26px 24px; }
-  .detail-row { border-bottom: 1px solid #d9d8d1; padding: 15px 0; }
-  .detail-row strong { font-size: 15px; }
-  .detail-countdown { flex-wrap: wrap; margin-top: 0; border-top: 0; }
-  .stats { margin: 16px 0; }
-  .stat-card { padding: 19px 3px; }
-  .stat-num { font-size: 26px; }
-  .stat-label { font-size: 12px; }
-  .notice-section { padding: 24px 18px 12px; }
-  .notice-item { grid-template-columns: 28px minmax(0, 1fr) 18px; gap: 8px; }
-  .notice-time { grid-column: 2; grid-row: 2; }
-  .notice-arrow { grid-column: 3; grid-row: 1 / span 2; }
-}
-</style>
+<style scoped src="./Home.css"></style>

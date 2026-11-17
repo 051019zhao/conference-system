@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 760" fill="none" aria-hidden="true">
+  <defs>
+    <pattern id="grid" width="46" height="46" patternUnits="userSpaceOnUse">
+      <path d="M46 0H0V46" stroke="#A3C4C4" stroke-opacity=".15" stroke-width="1"/>
+      <circle cx="0" cy="0" r="1.5" fill="#B7CFCE" fill-opacity=".28"/>
+    </pattern>
+    <linearGradient id="paper" x1="245" y1="245" x2="565" y2="575" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2F6770"/>
+      <stop offset="1" stop-color="#163A48"/>
+    </linearGradient>
+    <linearGradient id="edge" x1="193" y1="180" x2="611" y2="590" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#D7B889"/>
+      <stop offset="1" stop-color="#6C9A9E"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="26" y="26" width="708" height="708" fill="url(#grid)"/>
+  <rect x="26.5" y="26.5" width="707" height="707" stroke="#8EAEB2" stroke-opacity=".24"/>
+
+  <g stroke="#9DB9B9" stroke-opacity=".28" stroke-width="1">
+    <path d="M380 40V720M40 380H720"/>
+    <path d="M80 80L680 680M680 80L80 680" stroke-dasharray="3 9"/>
+  </g>
+  <g stroke="#B7A27C" stroke-width="1">
+    <circle cx="380" cy="380" r="292" stroke-opacity=".55"/>
+    <circle cx="380" cy="380" r="244" stroke-opacity=".32" stroke-dasharray="3 10"/>
+    <circle cx="380" cy="380" r="173" stroke-opacity=".38"/>
+    <path d="M380 70V98M380 662V690M70 380H98M662 380H690" stroke-opacity=".85"/>
+    <path d="M167 167L187 187M573 573L593 593M593 167L573 187M187 573L167 593" stroke-opacity=".55"/>
+  </g>
+
+  <g fill="#C7AB80">
+    <circle cx="380" cy="88" r="5"/>
+    <circle cx="622" cy="543" r="5"/>
+    <circle cx="151" cy="559" r="5"/>
+  </g>
+  <g stroke="#C7AB80" stroke-opacity=".75" stroke-width="1.5">
+    <circle cx="380" cy="88" r="12"/>
+    <circle cx="622" cy="543" r="12"/>
+    <circle cx="151" cy="559" r="12"/>
+  </g>
+
+  <g stroke="#8DB3B4" stroke-opacity=".78" stroke-width="1.5">
+    <path d="M380 88L480 214"/>
+    <path d="M622 543L526 502"/>
+    <path d="M151 559L242 483"/>
+    <path d="M145 260H253M535 233H644M97 500H187" stroke-dasharray="3 5"/>
+  </g>
+
+  <g>
+    <path d="M219 302L381 208L543 302L381 397L219 302Z" fill="url(#paper)" stroke="url(#edge)" stroke-width="2"/>
+    <path d="M219 302V376L381 471V397L219 302Z" fill="#1A4551" stroke="#8DB3B4" stroke-width="1.5"/>
+    <path d="M543 302V376L381 471V397L543 302Z" fill="#133745" stroke="#8DB3B4" stroke-width="1.5"/>
+    <path d="M219 376L381 471L543 376" stroke="#C6A97C" stroke-width="2"/>
+    <path d="M219 413L381 507L543 413M219 450L381 545L543 450" stroke="#9CBAB9" stroke-width="1.4"/>
+    <path d="M219 413V450M381 507V545M543 413V450" stroke="#7EA2A4" stroke-width="1.2"/>
+    <path d="M263 302L381 234L499 302L381 370L263 302Z" stroke="#D9C095" stroke-opacity=".7" stroke-width="1.2"/>
+    <path d="M301 302L381 257L461 302L381 348L301 302Z" stroke="#D9C095" stroke-opacity=".42" stroke-width="1.2"/>
+    <path d="M381 208V397M219 302H543" stroke="#9DBDBD" stroke-opacity=".28"/>
+    <circle cx="381" cy="302" r="30" fill="#C7AB80" fill-opacity=".12" stroke="#D4B989"/>
+    <circle cx="381" cy="302" r="8" fill="#D4B989"/>
+    <path d="M381 274V260M381 344V330M353 302H339M423 302H409" stroke="#D4B989" stroke-width="1.5"/>
+  </g>
+
+  <g fill="#BDD0CF" font-family="Arial, sans-serif" font-size="12" font-weight="700" letter-spacing="2">
+    <text x="469" y="177">DATA</text>
+    <text x="550" y="586">SYSTEMS</text>
+    <text x="73" y="602">RESEARCH</text>
+  </g>
+  <g fill="#9FB9B9" font-family="Arial, sans-serif" font-size="10" letter-spacing="1.4">
+    <text x="47" y="60">SEDB / 2026</text>
+    <text x="552" y="710">FIG. 01 — CONNECTION</text>
+  </g>
+  <g stroke="#A6C2C0" stroke-opacity=".48">
+    <path d="M49 120H121M49 128H96M639 637H711M664 645H711"/>
+  </g>
+</svg>

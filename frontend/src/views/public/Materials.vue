@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div class="page-title">资料下载</div>
+    <div class="section-kicker">DOWNLOADS & RESOURCES</div>
+    <component :is="embedded ? 'h2' : 'h1'" class="page-title">资料下载</component>
     <div class="page-card">
       <el-empty v-if="list.length === 0" description="暂无资料" />
       <el-table v-else :data="list" border>
@@ -27,6 +28,8 @@ import { ref, onMounted } from 'vue'
 import { getMaterials, downloadMaterial } from '../../api'
 import { formatSize } from '../../utils/format'
 
+defineProps({ embedded: { type: Boolean, default: false } })
+
 const list = ref([])
 
 async function handleDownload(row) {
@@ -38,3 +41,7 @@ onMounted(async () => {
   list.value = (await getMaterials()) || []
 })
 </script>
+
+<style scoped>
+.section-kicker { color: #a17f59; font-size: 11px; font-weight: 700; letter-spacing: .18em; margin-bottom: 9px; }
+</style>

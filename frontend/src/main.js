@@ -6,12 +6,14 @@ import * as Icons from '@element-plus/icons-vue'
 import 'element-plus/dist/index.css'
 import App from './App.vue'
 import router from './router'
+import ripple from './directives/ripple'
 
 const app = createApp(App)
 
 app.use(createPinia())
 app.use(router)
 app.use(ElementPlus, { locale: zhCn })
+app.directive('ripple', ripple)
 // 全局注册 Element Plus 图标组件
 for (const [name, component] of Object.entries(Icons)) {
   app.component(name, component)
